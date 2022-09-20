@@ -3,7 +3,7 @@ image:
 
 tasks:
   - name: terminal1
-    init: pip3 install pylint pycodestyle
+    init: pip3 install pylint pycodestyle requests
     command: |
       printf 'export PATH="%s:$PATH"\n' "~/.local/bin" >> $HOME/.bashrc && exit
       source ~/.bashrc
