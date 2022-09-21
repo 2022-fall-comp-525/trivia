@@ -1,19 +1,38 @@
-# todo, make a question and game class.
-# todo, save results to file to simulate a database?
+"""
+trivia.py
+20220921
+Jon Shallow
+"""
 
 import os
-import requests
-import html
 import random
+import html
+import requests
 
 def get_question():
-    response = requests.get('https://opentdb.com/api.php?amount=1')
+    """
+    Sends a request to the api for a single question
+
+    :return: A single question
+    :rtype: dict
+    """
+    response = requests.get('https://opentdb.com/api.php?amount=1', timeout=5)
+     # TODO should handle timeout response
     response_json = response.json()
     question_data = response_json['results'][0]
     question = parse_question(question_data)
-    return question 
+    return question
 
 def parse_question(question):
+    """
+    Parses the api response and returns a dictionary of a single question's
+    data.
+
+    :param question: json api response
+    :type question: json
+    :return: a dictionary of the question data
+    :rtype: dict
+    """
     data = {}
     data['category'] = question.get('category')
     data['type'] = question.get('type')
@@ -30,6 +49,12 @@ def parse_question(question):
     return data
 
 def print_question(question):
+    """
+    Prints the question to the screen.
+
+    :param question: the question
+    :type question: dict
+    """
     print(f"Category: {question.get('category')}")
     print(f"Type: {question.get('type')}")
     print(f"Difficulty: {question.get('difficulty')}")
@@ -47,21 +72,21 @@ def run():
     while playing:
         os.system('clear')
         print(f"Questions: {questions}  -- Correct {correct}")
-        q = get_question()
-        print_question(q)
-        user_choice = int(input(f'Enter Choice > ').lower())
+        question = get_question()
+        print_question(question)
+        user_choice = int(input('Enter Choice > ').lower())
         questions += 1
-        if q['choices'][user_choice][0] == 1:
+        if question['choices'][user_choice][0] == 1:
             print("Correct!")
             print(f"Questions: {questions}  -- Correct {correct}")
             correct += 1
         else:
             print("Wrong!")
-        keep_playing = input(f'Again? (Y or N) > ').lower()
+        keep_playing = input('Again? (Y or N) > ').lower()
         if keep_playing != 'y':
             playing = False
             print('Goodbye!')
-        
+
 
 if __name__ == "__main__":
     run()
